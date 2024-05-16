@@ -8,6 +8,11 @@ if [[ $# -ne 1 ]]; then
     echo "$0 /path/to/payload.bin"
     exit 1
 fi
+command -v goversioninfo > /dev/null || { \
+    echo "[-] goversioninfo needs to be installed, installing now"; \
+    go install \
+    github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest; \
+}
 sc_fullpath=$(readlink -f "$1")
 echo "[+] Full path of payload file: $sc_fullpath"
 cd sc_obfuscator || exit 1
