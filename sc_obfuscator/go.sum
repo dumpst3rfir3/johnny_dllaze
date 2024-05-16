@@ -1,0 +1,6 @@
+github.com/mjwhitta/babble v0.1.1 h1:mj5g7kRI+UPIQ2w1iGOnexkzfReioZwfPYXLTQUY9T8=
+github.com/mjwhitta/babble v0.1.1/go.mod h1:Zapl15CdQ2g2UV2oeGbyKLm7HrbxpMAwZ7SKUWJFqqw=
+github.com/mjwhitta/errors v1.0.3 h1:0+L8/7ypucj6ufBNt8Rm2qPvJ9qwmS+TtgOJYCYb6Sw=
+github.com/mjwhitta/errors v1.0.3/go.mod h1:VxHM8bLMPVqkvHiYQq4Nq4sjNqPjUtKLhSF2I0wve5U=
+github.com/mjwhitta/hilighter v1.11.9 h1:jC+44GMw9xe83cSypZKj3Q0+zWup/jblBw467L2Mer8=
+github.com/mjwhitta/hilighter v1.11.9/go.mod h1:0db9WcxBNN3QKZZwoayq2OeQg7dJwwbCjxBEUjAyrKk=
