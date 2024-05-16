@@ -1,6 +1,6 @@
-![](johnny_dllaze.jpg)
-
 # Johnny DLLaze, GOst Writer
+
+![](johnny_dllaze.jpg)
 
 This tool was developed for red team or other security testing purposes. It will simply take a shellcode (e.g., .bin) file, obfuscate the shellcode using [Babble](https://github.com/mjwhitta/babble), and then build a DLL (written in Go) that decodes the shellcode (in place, in memory) and executes it using VirtualAlloc/RtlCopyMemory/VirtualProtect/CreateThread. The DLL is also built with customizable Windows Version Info to make it appear more like a "real" DLL.
 
