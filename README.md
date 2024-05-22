@@ -15,13 +15,15 @@ mingw-w64-gcc
 
 This tool was designed to be used in Linux.
 
-First, edit the versioninfo.json file in the goDLL directory, if desired. Then, from the root directory of the repository, run:
+First, edit the versioninfo.json file in the goDLL directory, if desired. You will also probably want to change the name of the output DLL in `goDLL/build_dll_on_linux.sh`. (The default name is updater.dll)
+
+Then, from the root directory of the repository, run:
 
 ```
 ./generate_payload.sh /path/to/your/payload.bin
 ```
 
-The generated DLL file, version.dll by default (this can be changed in the build script in the goDLL directory), will be in the goDLL directory.
+The generated DLL file, updater.dll by default, will be in the goDLL directory.
 
 Once it's built, it can be executed with regsvr32, rundll32 (Main, DllRegisterServer, and DllUnRegisterServer are all exported), or sideload.
 
