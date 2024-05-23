@@ -49,4 +49,4 @@ if [[ $# -eq 3 ]]; then
     fi
     echo "[+] ISO file created with filename $isofilename in payloads"
 fi
-echo "[+] WOOOOO, have a nice day!"
+echo "[+] WOOOOOO, have a nice day!"
