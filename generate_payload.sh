@@ -1,7 +1,8 @@
 #!/bin/bash
 ./logo.sh 
 echo "[+] Now launching Johnny DLLaze"
-rm -f payloads/*.*
+rm -rf payloads/
+mkdir payloads
 command -v go > /dev/null || { \
     echo "[!] Go is required, please install it"; exit 1; }
 command -v goversioninfo > /dev/null || { \
