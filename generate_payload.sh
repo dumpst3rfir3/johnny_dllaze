@@ -41,7 +41,8 @@ mv ../goDLL/$output_dll ../payloads/
 if [[ $# -eq 3 ]]; then
     echo "[+] Iso file will be generated"
     cd ../payloads
-    mkisofs -o $isofilename  -V "You've Been GOadered" -hidden "$output_dll" -quiet -allow-lowercase -l * 2>/dev/null
+    mkisofs -o $isofilename  -V "You've Been GOadered" -hidden "$output_dll" \
+        -quiet -allow-lowercase -l * 2>/dev/null
     echo "[+] Iso file created with filename $isofilename in payloads"
 fi
 echo "[+] WOOOOO, have a nice day!"
