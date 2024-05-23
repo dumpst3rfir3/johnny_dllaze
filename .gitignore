@@ -4,3 +4,4 @@
 *.h
 goDLL/payload.go
 resource.syso
+goDLL/versioninfo.json
