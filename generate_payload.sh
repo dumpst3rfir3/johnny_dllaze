@@ -31,4 +31,6 @@ echo "[+] Done, $output_dll should be in the goDLL directory"
 echo "[+] Compiling sideload executable now"
 cd ../goEXE
 ./build_exe_on_linux.sh "$output_dll"
+cp -f goader.exe ../payloads/
+cp -f ../goDLL/$output_dll ../payloads/
 echo "[+] WOOOOO, have a nice day!"
