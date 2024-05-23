@@ -2,6 +2,10 @@
 rm payloads/*.*
 command -v go > /dev/null || { \
     echo "[!] Go is required, please install it"; exit 1; }
+
+command -v mkisofs > /dev/null || { \
+    echo "[!] mkisofs is required, it's part of cdrtools, please install it"; exit 1; }
+
 if [[ $# -lt 1 ]]; then
     echo "[!] Invalid number or arguments."
     echo "Usage:"
@@ -37,7 +41,7 @@ mv ../goDLL/$output_dll ../payloads/
 if [[ $# -eq 3 ]]; then
     echo "[+] Iso file will be generated"
     cd ../payloads
-    mkisofs -o $isofilename  -V "You've Been GOadered" -hidden "$output_dll" -allow-lowercase -l * 
-    echo "[+] Iso file created with filename $isofilename"
+    mkisofs -o $isofilename  -V "You've Been GOadered" -hidden "$output_dll" -quiet -allow-lowercase -l * 2>/dev/null
+    echo "[+] Iso file created with filename $isofilename in payloads"
 fi
 echo "[+] WOOOOO, have a nice day!"
