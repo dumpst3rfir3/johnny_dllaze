@@ -6,3 +6,4 @@
 goDLL/payload.go
 resource.syso
 goDLL/versioninfo.json
+payloads/
