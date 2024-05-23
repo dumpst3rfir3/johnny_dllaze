@@ -14,6 +14,9 @@ func DllRegisterServer() {}
 //export DllUnregisterServer
 func DllUnregisterServer() {}
 
+//export Now
+func Now() {}
+
 // This causes the real main to be called by LoadLibrary() and
 // rundll32.exe, hence why Main() is empty.
 func init() {

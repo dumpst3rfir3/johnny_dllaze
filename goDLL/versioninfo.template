@@ -20,7 +20,7 @@
     },
     "StringFileInfo": {
         "Comments": "This is a legitimate DLL, nothing to see here",
-        "CompanyName": "dumpst3rfir3",
+        "CompanyName": "Gony Entertainment",
         "FileDescription": "This library does stuff",
         "FileVersion": "1.0",
         "InternalName": "updater.dll",

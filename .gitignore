@@ -1,0 +1,7 @@
+*.dll
+*.bin
+*.exe
+*.h
+goDLL/payload.go
+resource.syso
+goDLL/versioninfo.json
