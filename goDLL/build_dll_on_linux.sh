@@ -10,4 +10,4 @@ go generate
 
 # Compile DLL for windows using mingw
 go build --buildmode=c-shared --buildvcs=false --ldflags="-s -w" \
-    -o "updater.dll" --tags=dll --trimpath .
+    -o "${1:-updater.dll}" --tags=dll --trimpath .

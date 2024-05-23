@@ -19,14 +19,14 @@
         "FileSubType": "00"
     },
     "StringFileInfo": {
-        "Comments": "This is a legitimate DLL, nothing to see here",
+        "Comments": "The One, The True, The Goader",
         "CompanyName": "ChalupaBatman",
-        "FileDescription": "This library does stuff",
+        "FileDescription": "Prepare for the Goading",
         "FileVersion": "1.0",
-        "InternalName": "doit.dll",
+        "InternalName": "goader.exe",
         "LegalCopyright": "",
         "LegalTrademarks": "",
-        "OriginalFilename": "doit.dll",
+        "OriginalFilename": "goader.exe",
         "PrivateBuild": "",
         "ProductName": "",
         "ProductVersion": "v1.0.0.0",
