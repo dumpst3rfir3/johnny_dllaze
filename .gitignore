@@ -2,6 +2,7 @@
 *.bin
 *.exe
 *.h
+*.iso
 goDLL/payload.go
 resource.syso
 goDLL/versioninfo.json
