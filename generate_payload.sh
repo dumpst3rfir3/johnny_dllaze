@@ -35,10 +35,11 @@ cp key.bin ../goDLL/
 cd ../goDLL || exit 1
 echo "[+] Building the DLL.."
 ./build_dll_on_linux.sh "$output_dll"
-echo "[+] Done, $output_dll should be in the goDLL directory"
+echo "[+] Done, $output_dll will be in the payloads directory"
 echo "[+] Compiling sideload executable now"
 cd ../goEXE
 ./build_exe_on_linux.sh "$output_dll"
+echo "[+] Done, goader.exe will be in the payloads directory"
 mv goader.exe ../payloads/
 mv ../goDLL/$output_dll ../payloads/
 if [[ $# -eq 3 ]]; then
