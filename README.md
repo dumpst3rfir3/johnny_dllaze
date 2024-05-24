@@ -36,7 +36,7 @@ All output files, including the DLL, the goader.exe file for sideloading, and th
 
 ## Credit
 
-All the goader sideloader and ISO creation code was written and contributed by [ineffectivecoder](https://github.com/ineffectivecoder). Special shout out to [mjwhitta](https://github.com/mjwhitta) for all of his help.
+All the goader sideloader and ISO creation code was written and contributed by [ineffectivecoder](https://github.com/ineffectivecoder). Special shout out to [mjwhitta](https://github.com/mjwhitta) for all of his help, especially the [arTTY](https://github.com/mjwhitta/arTTY) logo used in the generator script.
 
 These great libraries were used in the code:
 - [https://github.com/mjwhitta/babble](https://github.com/mjwhitta/babble)
