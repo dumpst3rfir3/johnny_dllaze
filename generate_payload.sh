@@ -3,6 +3,28 @@
 echo "[+] Now launching Johnny DLLaze"
 rm -rf payloads/
 mkdir payloads
+HIJACK=false
+pos=()
+for arg in "$@"; do
+    if [[ $arg == "--hijack" ]]; then
+        HIJACK=true
+        if [[ -z $(command -v goppeling) ]]; then
+            echo "[-] goppeling not found, go install github.com/ineffectivecoder/goppeling "
+            exit 0
+        fi
+        echo  "[+] Hijack mode enabled, building hijackable DLL"
+        echo "[+] Ensure you have provided a DLL and an EXE to identify hijack opportunities"
+        if [[ ! -f hijack.exe ]] || [[ ! -f hijack.dll ]]; then
+            echo "[-] hijack.exe or hijack.dll not found in current directory"
+            echo "[-] Please provide the files and try again"
+            exit 1
+        fi
+        goppeling -dir goDLL -dll hijack.dll -exe hijack.exe
+    else
+        pos+=("$arg")
+    fi
+done
+set -- "${pos[@]}"
 command -v go > /dev/null || { \
     echo "[!] Go is required, please install it"; exit 1; }
 command -v goversioninfo > /dev/null || { \
