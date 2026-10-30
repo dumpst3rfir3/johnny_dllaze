@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand/v2"
 	"os"
+	"path/filepath"
 
 	"github.com/mjwhitta/babble"
 )
@@ -38,11 +39,14 @@ func scObfuscator(scFile string) error {
 	var e error
 	var k *babble.Key
 	var enc_bytes []byte
-	var dllpayloadfilename string = "dll/payload_generated.go"
+	var dllpayloadfilename string = filepath.Join(
+		"dll",
+		"payload_generated.go",
+	)
 	var dllpayloadfile *os.File
 	var footer string = "-----END BABBLE-----"
 	var header string = "-----BEGIN BABBLE-----"
-	var keyFile string = "dll/key_generated.bin"
+	var keyFile string = filepath.Join("dll", "key_generated.bin")
 
 	e = byteMap(keyFile)
 	checkError(e)

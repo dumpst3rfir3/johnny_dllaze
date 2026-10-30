@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -71,7 +70,9 @@ func generateAdaptiveDLLTemplate() {
 
 	f, err = os.Create(filepath.Join("dll", "main_dll_entries_generated.go"))
 	if err != nil {
-		log.Fatal("[!] Failed to create Go file for DLL entries: " + err.Error())
+		log.Fatal(
+			"[!] Failed to create Go file for DLL entries: " + err.Error(),
+		)
 	}
 	defer f.Close()
 
@@ -120,18 +121,3 @@ func getDllExports(dllPath string) ([]string, error) {
 	return exports, nil
 }
 
-func writeExportToSB(iw io.Writer, exportName string) error {
-	var err error
-	if exportName != "init" {
-		_, err = fmt.Fprintf(iw,
-			"//export %s\n",
-			exportName)
-		if err != nil {
-			return err
-		}
-	}
-	_, err = fmt.Fprintf(iw,
-		"func %s() {\n\t// TODO\n}\n\n",
-		exportName)
-	return err
-}

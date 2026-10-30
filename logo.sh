@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+# Kept for reference from older versions of Johnny Dllaze.
+# The builder binary embeds a pre-rendered version (builder/cmd/logo.ansi).
+# To update the logo: run `bash logo.sh > builder/cmd/logo.ansi` and rebuild.
+
 function logo() {
     echo
     echo -en "                                                  \e[38"

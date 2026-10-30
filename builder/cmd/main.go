@@ -19,6 +19,8 @@ func main() {
 		err error
 	)
 
+	printLogo()
+
 	// Check if Go is installed
 	if _, err = exec.LookPath("go"); err != nil {
 		log.Fatal("[!] Go is not installed or not in PATH, please install " +
@@ -44,15 +46,6 @@ func main() {
 		log.Println("[+] goversioninfo installed successfully")
 	}
 
-	// Check if ISO generation is desired, and if so,
-	// check if mkisofs is installed
-	if !(flags.outputIsoFile == "") {
-		if _, err = exec.LookPath("mkisofs"); err != nil {
-			log.Fatal("[!] mkisofs is not installed or not in PATH, please " +
-				"install and/or add it to your PATH")
-		}
-	}
-
 	if !(flags.adaptHijackDll == "") {
 		if _, err = os.Stat(flags.adaptHijackDll); os.IsNotExist(err) {
 			log.Fatalf(
@@ -62,12 +55,17 @@ func main() {
 		}
 		generateAdaptiveDLLTemplate()
 	} else {
-		//generateStandardDLLTemplate()
+		generateStandardDLLTemplate()
 	}
+
+	err = generateVersioninfo()
+	checkError(err)
 
 	err = scObfuscator(flags.shellcodeFile)
 	checkError(err)
 
+	err = compileAll()
+	checkError(err)
 }
 
 func runShellCommand(command []string) (string, error) {

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mjwhitta/cli"
 )
@@ -11,7 +13,6 @@ import (
 var flags struct {
 	adaptHijackDll      string
 	adaptHijackFunction string
-	keyFile             string
 	outputDll           string
 	outputExe           string
 	outputIsoFile       string
@@ -21,6 +22,8 @@ var flags struct {
 }
 
 func init() {
+	var err error
+
 	cli.Align = true
 	cli.Banner = fmt.Sprintf("%s [OPTIONS]", filepath.Base(os.Args[0]))
 	cli.Info(
@@ -37,33 +40,37 @@ func init() {
 		"hijack, if adaptive DLL hijacking is desired (like Koppeling).")
 	cli.Flag(&flags.adaptHijackFunction, "f", "function", "", "Function to "+
 		"hijack in the DLL, if using adaptive DLL hijacking.")
-	cli.Flag(&flags.keyFile, "k", "keyFile", "", "Path to the key file "+
-		"that Babble will use for shellcode obfuscation. If not provided, "+
-		"one will be generated for you.")
-	cli.Flag(&flags.outputDll, "D", "outputDll", "updater.dll", "Name of the "+
+	cli.Flag(&flags.outputDll, "o", "output", "updater.dll", "Name of the "+
 		"output DLL (default: updater.dll)")
 	cli.Flag(&flags.outputExe, "E", "outputExe", "goader.exe", "Name of the "+
 		"output executable (default: goader.exe)")
-	cli.Flag(&flags.outputIsoFile, "I", "outputIsoFile", "", "Name of the "+
+	cli.Flag(&flags.outputIsoFile, "I", "outputIso", "", "Name of the "+
 		"output ISO file to use, if using ISO-based delivery (e.g., for "+
 		"HTML smuggling - by default, none will be generated)")
-	cli.Flag(&flags.regSvr32, "r", "regSvr32", false, "If set, the DLL will "+
+	cli.Flag(&flags.regSvr32, "r", "regsvr32", false, "If set, the DLL will "+
 		"be generated with the DllRegisterServer and DllUnregisterServer "+
 		"entry points so that it can be executed with regsvr32")
-	cli.Flag(&flags.runDll32Func, "R", "runDll32Func", "", "If set, the DLL "+
-		"the DLL will be generated with an exported function with the "+
-		" specified name, which can be executed with rundll32. If using "+
-		"adaptive DLL hijacking, this will be ignored and the hijacked"+
-		" function will be used instead. If adaptive DLL hijacking is not "+
-		"being used, and no runDll32Func is specified, then a default "+
-		"function named \"Dllaze\" will be used")
+	cli.Flag(&flags.runDll32Func, "R", "rundll32", "", "If set, the DLL "+
+		"will be generated with an exported function with the specified "+
+		"name, which can be executed with rundll32. If using adaptive DLL "+
+		"hijacking, this will be ignored and the hijacked function will be "+
+		"used instead. If not specified and not using adaptive hijacking, "+
+		"a default function named \"Dllaze\" will be used")
 	cli.Flag(&flags.shellcodeFile, "s", "shellcodeFile", "", "Path to the "+
 		"shellcode file (REQUIRED)")
 
 	cli.Parse()
-	if flags.shellcodeFile == "" {
-		fmt.Println("[!] Error: shellcode file is required")
+	err = validate()
+	if err != nil {
+		fmt.Printf("[!] Error: %s\n", err)
 		cli.Usage(1)
+	}
+
+}
+
+func validate() error {
+	if flags.shellcodeFile == "" {
+		return errors.New("shellcode file is required")
 	}
 	if flags.adaptHijackDll == "" &&
 		flags.runDll32Func == "" &&
@@ -71,8 +78,21 @@ func init() {
 		flags.runDll32Func = "Dllaze"
 	}
 	if flags.adaptHijackDll == "" && flags.adaptHijackFunction != "" {
-		fmt.Println("[!] Error: if adaptHijackFunction is specified, " +
+		return errors.New("if adaptHijackFunction is specified, " +
 			"adaptHijackDll must also be specified")
-		cli.Usage(1)
 	}
+	if strings.Contains(filepath.ToSlash(flags.outputDll), "/") {
+		return errors.New("output DLL name cannot contain path separators")
+	}
+	if strings.Contains(filepath.ToSlash(flags.outputExe), "/") {
+		return errors.New("output EXE name cannot contain path separators")
+	}
+	if flags.outputIsoFile != "" &&
+		strings.Contains(filepath.ToSlash(flags.outputIsoFile), "/") {
+		return errors.New(
+			"output ISO file name cannot contain path separators",
+		)
+	}
+
+	return nil
 }
