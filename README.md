@@ -34,8 +34,7 @@ The builder works on Linux, macOS, and Windows.
 
 ### Customizing Versioninfo
 
-Before building, you can edit the versioninfo files to control how the output
-binaries appear on Windows:
+Before building, you can edit the versioninfo files to control how the versioninfo of the output binaries appears on Windows:
 
 - `versioninfo.template` (project root) - controls the DLL's Windows version
   info. Supports `{{.Name}}` and `{{.FileName}}` template variables which are
