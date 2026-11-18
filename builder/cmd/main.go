@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 func checkError(err error) {
@@ -32,9 +33,38 @@ func main() {
 		log.Fatal("[!] Shellcode file does not exist")
 	}
 
+	flags.shellcodeFile, err = filepath.Abs(flags.shellcodeFile)
+	if err != nil {
+		log.Fatal("[!] Failed to resolve shellcode file path: ", err)
+	}
+	log.Printf("[+] Shellcode file: %s", flags.shellcodeFile)
+	log.Printf("[+] Output DLL:     %s", flags.outputDll)
+	log.Printf("[+] Output EXE:     %s", flags.outputExe)
+
+	if flags.adaptHijackDll != "" {
+		log.Printf(
+			"[+] Mode:           adaptive DLL hijack (%s)",
+			flags.adaptHijackDll,
+		)
+	} else {
+		log.Println("[+] Mode:           standard")
+	}
+
+	if flags.exportFunc != "" {
+		log.Printf("[+] rundll32:       enabled (export: %s)", flags.exportFunc)
+	}
+
+	if flags.regSvr32 {
+		log.Println("[+] regsvr32:       enabled")
+	}
+
+	if flags.outputIsoFile != "" {
+		log.Printf("[+] ISO:            %s", flags.outputIsoFile)
+	}
+
 	// Check if goversioninfo is installed
 	if _, err = exec.LookPath("goversioninfo"); err != nil {
-		log.Println("[-] goversoinfo is not installed, installing it now...")
+		log.Println("[-] goversioninfo is not installed, installing it now...")
 		cmd = []string{
 			"go",
 			"install",
@@ -46,7 +76,7 @@ func main() {
 		log.Println("[+] goversioninfo installed successfully")
 	}
 
-	if !(flags.adaptHijackDll == "") {
+	if flags.adaptHijackDll != "" {
 		if _, err = os.Stat(flags.adaptHijackDll); os.IsNotExist(err) {
 			log.Fatalf(
 				"[!] Hijack DLL file %s does not exist",
@@ -66,6 +96,8 @@ func main() {
 
 	err = compileAll()
 	checkError(err)
+
+	log.Println("[+] WOOOOOO, have a nice day!")
 }
 
 func runShellCommand(command []string) (string, error) {

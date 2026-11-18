@@ -11,14 +11,13 @@ import (
 )
 
 var flags struct {
-	adaptHijackDll      string
-	adaptHijackFunction string
-	outputDll           string
-	outputExe           string
-	outputIsoFile       string
-	regSvr32            bool
-	runDll32Func        string
-	shellcodeFile       string
+	adaptHijackDll string
+	exportFunc     string
+	outputDll      string
+	outputExe      string
+	outputIsoFile  string
+	regSvr32       bool
+	shellcodeFile  string
 }
 
 func init() {
@@ -37,9 +36,13 @@ func init() {
 			"actually executed the shellcode).",
 	)
 	cli.Flag(&flags.adaptHijackDll, "d", "dll", "", "Path to the DLL to "+
-		"hijack, if adaptive DLL hijacking is desired (like Koppeling).")
-	cli.Flag(&flags.adaptHijackFunction, "f", "function", "", "Function to "+
-		"hijack in the DLL, if using adaptive DLL hijacking.")
+		"mimic for adaptive DLL hijacking (like Koppeling).")
+	cli.Flag(&flags.exportFunc, "f", "function", "", "Name of an exported "+
+		"function to add to the DLL. In standard mode, this enables "+
+		"rundll32 execution with the given function name. In adaptive "+
+		"hijacking mode (-d), this stubs the named export instead of "+
+		"forwarding it to the original DLL. In both modes, if omitted, "+
+		"no extra export is added.")
 	cli.Flag(&flags.outputDll, "o", "output", "updater.dll", "Name of the "+
 		"output DLL (default: updater.dll)")
 	cli.Flag(&flags.outputExe, "E", "outputExe", "goader.exe", "Name of the "+
@@ -50,12 +53,6 @@ func init() {
 	cli.Flag(&flags.regSvr32, "r", "regsvr32", false, "If set, the DLL will "+
 		"be generated with the DllRegisterServer and DllUnregisterServer "+
 		"entry points so that it can be executed with regsvr32")
-	cli.Flag(&flags.runDll32Func, "R", "rundll32", "", "If set, the DLL "+
-		"will be generated with an exported function with the specified "+
-		"name, which can be executed with rundll32. If using adaptive DLL "+
-		"hijacking, this will be ignored and the hijacked function will be "+
-		"used instead. If not specified and not using adaptive hijacking, "+
-		"a default function named \"Dllaze\" will be used")
 	cli.Flag(&flags.shellcodeFile, "s", "shellcodeFile", "", "Path to the "+
 		"shellcode file (REQUIRED)")
 
@@ -72,15 +69,11 @@ func validate() error {
 	if flags.shellcodeFile == "" {
 		return errors.New("shellcode file is required")
 	}
-	if flags.adaptHijackDll == "" &&
-		flags.runDll32Func == "" &&
-		!flags.regSvr32 {
-		flags.runDll32Func = "Dllaze"
+
+	if flags.adaptHijackDll != "" && flags.outputDll == "updater.dll" {
+		flags.outputDll = filepath.Base(flags.adaptHijackDll)
 	}
-	if flags.adaptHijackDll == "" && flags.adaptHijackFunction != "" {
-		return errors.New("if adaptHijackFunction is specified, " +
-			"adaptHijackDll must also be specified")
-	}
+
 	if strings.Contains(filepath.ToSlash(flags.outputDll), "/") {
 		return errors.New("output DLL name cannot contain path separators")
 	}

