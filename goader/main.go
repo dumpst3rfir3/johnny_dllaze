@@ -9,7 +9,9 @@ import (
 var dll string
 
 func main() {
-	if _, e := windows.LoadLibrary(dll); e != nil {
+	var e error
+	_, e = windows.LoadLibrary(dll)
+	if e != nil {
 		println(e.Error())
 	}
 
